@@ -25,7 +25,7 @@ export default function CardGrid({ posts }) {
               <Text>{post.postDescription}</Text>
             </CardBody>
             <CardFooter>
-              Tags: <b className="ml-1">{post.tags.join(", ")}</b>
+              Tags: <b className="ml-1">{post.tags.split(",").join(", ")}</b>
             </CardFooter>
           </Card>
         );

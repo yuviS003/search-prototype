@@ -6,15 +6,19 @@ const API_BASE_URL = `http://localhost:5000`;
 export default function About4() {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
-    fetch(`${API_BASE_URL}/post`, {
-      method: "GET",
+    fetch(`${API_BASE_URL}/post/fetchByUrl`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify({
+        url: "http://localhost:3000/about4",
+      }),
     })
       .then((res) => res.json())
       .then((res) => {
-        setPosts(res);
+        console.log(res);
+        setPosts(res.result);
       })
       .catch((err) => console.error(err));
   }, []);

@@ -58,7 +58,7 @@ const deleteAllPosts = async (req, res) => {
 
 const getAllPostByUrl = async (req, res) => {
   try {
-    const url = req.params.url;
+    const { url } = req.body;
     const result = await db.SearchEngine.findAll({ where: { url } });
     if (!result.length)
       res.status(404).json({ message: "No matching results found" });
