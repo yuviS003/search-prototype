@@ -56,4 +56,16 @@ const deleteAllPosts = async (req, res) => {
   }
 };
 
-module.exports = { createPost, deleteAllPosts, getAllPosts };
+const getAllPostByUrl = async (req, res) => {
+  try {
+    const url = req.params.url;
+    const result = await db.SearchEngine.findAll({ where: { url } });
+    if (!result.length)
+      res.status(404).json({ message: "No matching results found" });
+    res.status(200).json({ result });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+module.exports = { createPost, deleteAllPosts, getAllPosts, getAllPostByUrl };
