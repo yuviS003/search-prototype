@@ -1,12 +1,13 @@
 const db = require("../helpers/db");
 const getSearchResults = async (req, res) => {
   try {
-    const { tags } = req.body;
+    const { query } = req.body;
 
+    let searchResults = [];
     let parsedResult = [];
 
-    const result = await db.SearchEngine.findAll();
-    result.forEach((element) => {
+    const allPosts = await db.SearchEngine.findAll();
+    allPosts.forEach((element) => {
       parsedResult.push({
         ...element.dataValues,
         tags: element.dataValues.tags.split(","),
@@ -14,16 +15,17 @@ const getSearchResults = async (req, res) => {
     });
 
     if (parsedResult.length) {
-      let searchResults = [];
       parsedResult.forEach((element) => {
-        if (element.tags.some((elem) => tags.includes(elem))) {
+        if (element.tags.some((elem) => query.includes(elem))) {
           searchResults.push(element);
         }
       });
       if (searchResults.length) res.status(200).json(searchResults);
+      else
+        res
+          .status(404)
+          .json({ message: "No search results found for this query" });
     }
-
-    res.status(404).json({ message: "No results found" });
   } catch (err) {
     console.log(err);
   }
