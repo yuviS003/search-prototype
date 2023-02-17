@@ -17,7 +17,7 @@ export default function CardGrid({ posts }) {
     >
       {posts.map((post, index) => {
         return (
-          <Card key={index}>
+          <Card key={index} className="hover:shadow-2xl hover:cursor-pointer">
             <CardHeader>
               <Heading size="md">{post.postName}</Heading>
             </CardHeader>
