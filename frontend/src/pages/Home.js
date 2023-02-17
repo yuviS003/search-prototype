@@ -19,8 +19,8 @@ export default function Home() {
     }
   };
   return (
-    <div className="w-full h-[90%] flex justify-center items-center">
-      <div className="w-[38%] min-h-[50%] rounded shadow-md border border-gray-400 flex flex-col p-4 items-start justify-around">
+    <div className="w-full h-[90%] flex justify-center items-center bg-gray-400">
+      <div className="w-[38%] min-h-[50%] rounded shadow-md border border-gray-400 flex flex-col p-4 items-start justify-around bg-white">
         <p className="text-3xl mb-3 font-semibold">Create a post</p>
         <input
           type="text"
