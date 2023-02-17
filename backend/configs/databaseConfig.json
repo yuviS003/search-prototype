@@ -1,0 +1,10 @@
+{
+  "database": {
+    "user": "root",
+    "password": "yuvraj123456789",
+    "database": "search-engine",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "port": 3306
+  }
+}
