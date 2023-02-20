@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Modal,
@@ -12,12 +12,14 @@ import {
   Button,
   Stack,
   useToast,
+  Input,
 } from "@chakra-ui/react";
 import { BsArrowReturnRight } from "react-icons/bs";
 
 const API_BASE_URL = "http://localhost:5000";
 
 export default function Navbar() {
+  const [searchBoxText, setSearchBoxText] = useState("Fetching Results...");
   const navigate = useNavigate();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -26,6 +28,7 @@ export default function Navbar() {
   const goSearch = () => {
     // console.log(query);
     // onOpen();
+    onOpen();
     if (query !== "") {
       fetch(`${API_BASE_URL}/search`, {
         method: "POST",
@@ -39,15 +42,15 @@ export default function Navbar() {
           console.log(res);
           if (!res?.message) {
             setSearchedResults(res);
-            onOpen();
           } else {
-            toast({
-              title: "ERROR.",
-              description: `${res.message}`,
-              status: "error",
-              duration: 3000,
-              isClosable: true,
-            });
+            // toast({
+            //   title: "ERROR.",
+            //   description: `${res.message}`,
+            //   status: "error",
+            //   duration: 3000,
+            //   isClosable: true,
+            // });
+            setSearchBoxText("No results found.");
           }
         })
         .catch((err) => console.error(err));
@@ -58,6 +61,10 @@ export default function Navbar() {
     onClose();
     navigate(`/${routeTo}`);
   };
+  useEffect(() => {
+    if (query.trim().length !== 0) goSearch();
+    else setSearchedResults([]);
+  }, [query]);
   return (
     <>
       <div className="sticky top-0 left-0 h-[10%] w-full flex justify-between items-center px-5 bg-blue-500 border-b-2 border-black shadow-stone-500 z-10">
@@ -105,26 +112,46 @@ export default function Navbar() {
           <ModalCloseButton />
           <ModalBody>
             <Stack direction="column" spacing={3}>
-              {searchedResults.map((result, index) => {
-                return (
-                  <div
-                    className="border border-gray-400 shadow rounded-lg hover:bg-cyan-200 flex w-full p-2 hover:cursor-pointer"
-                    key={index}
-                    onClick={() => handleSearchRouting(result.url)}
-                  >
-                    <div className="w-[95%] flex flex-col">
-                      <p className="text-lg font-semibold">{result.postName}</p>
-                      <p className="text-md my-1">
-                        {result.postDescription.split().slice(0, 15).join() +
-                          "..."}
-                      </p>
-                    </div>
-                    <div className="w-[5%] flex justify-center items-center">
-                      <BsArrowReturnRight />
-                    </div>
-                  </div>
-                );
-              })}
+              <Input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search"
+                type="search"
+                my="1rem"
+                autoFocus
+              />
+              {searchedResults.length === 0 ? (
+                <p className="text-xl uppercase w-full h-full text-center font-semibold py-5">
+                  {searchBoxText}
+                </p>
+              ) : (
+                <>
+                  {searchedResults.map((result, index) => {
+                    return (
+                      <div
+                        className="border border-gray-400 shadow rounded-lg hover:bg-cyan-200 flex w-full p-2 hover:cursor-pointer"
+                        key={index}
+                        onClick={() => handleSearchRouting(result.url)}
+                      >
+                        <div className="w-[95%] flex flex-col">
+                          <p className="text-lg font-semibold">
+                            {result.postName}
+                          </p>
+                          <p className="text-md my-1">
+                            {result.postDescription
+                              .split()
+                              .slice(0, 15)
+                              .join() + "..."}
+                          </p>
+                        </div>
+                        <div className="w-[5%] flex justify-center items-center">
+                          <BsArrowReturnRight />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </>
+              )}
             </Stack>
           </ModalBody>
 
